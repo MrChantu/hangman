@@ -78,7 +78,7 @@ export default class utils {
         const wordLength = storage.getWord().length;
         for (let i = 0; i < wordLength; i += 1) {
             if (!word.includes('_')) {
-                WININFO.innerHTML = 'You win!';
+                WININFO.textContent = 'You win!';
                 storage.isWonTrue();
                 // Set input/info boxes hidden or unhidden
                 PLAYBTN.hidden = false;
@@ -86,7 +86,7 @@ export default class utils {
                 INPUTBOX.hidden = true;
                 break;
             } else if (wrongCounter > 9) {
-                WININFO.innerHTML = `You ran out of guesses. The word was "${storage.getWord()}"`;
+                WININFO.textContent = `You ran out of guesses. The word was "${storage.getWord()}".`;
                 storage.isWonTrue();
                 PLAYBTN.hidden = false;
                 GUESSBTN.hidden = true;
@@ -106,12 +106,41 @@ export default class utils {
         } else {
             IMAGE.style.visibility = 'visible';
         }
-        IMAGE.src = `./hangman-img/hangman${wrongCounter}.png`;
+        IMAGE.src = `./img/hangman${wrongCounter}.svg`;
         if (wrongCounter > 9) {
-            IMAGE.src = `./hangman-img/hangman0.png`;
+            IMAGE.src = `./img/hangman0.svg`;
         } else if (storage.getIsWon()) {
-            IMAGE.src = `./hangman-img/hangman0.png`;
+            IMAGE.src = `./img/hangman0.svg`;
         }
+    }
+
+    static mergeSort(array) {
+        const merge = (left, right) => {
+            const result = [];
+
+            while (left.length && right.length) {
+                if (left[0] < right[0]) {
+                    result.push(left.shift());
+                } else {
+                    result.push(right.shift());
+                }
+            }
+
+            return [...result, ...left, ...right];
+        };
+        if (array.length === 0) return undefined;
+        if (array.length <= 1) return array;
+        const middle = Math.floor(array.length / 2);
+        const left = array.slice(0, middle);
+        const right = array.slice(middle);
+        return merge(this.mergeSort(left), this.mergeSort(right));
+    }
+
+    static handleUsedLetters() {
+        const LETTERS = document.querySelector('#letters-content');
+        const letterArray = storage.getGuessedLetters();
+        const sortedArray = this.mergeSort(letterArray);
+        LETTERS.textContent = sortedArray;
     }
 
     static loadEventListeners() {
@@ -130,8 +159,7 @@ export default class utils {
                 WININFO.textContent =
                     'Make sure you are entering only letters.';
             } else if (guessedLetters.includes(guessedLetter)) {
-                WININFO.textContent =
-                    `You already guessed the letter "${guessedLetter}"`;
+                WININFO.textContent = `You already guessed the letter "${guessedLetter}".`;
             } else {
                 storage.addLetter(guessedLetter);
                 WININFO.textContent = '';
@@ -139,6 +167,7 @@ export default class utils {
                 utils.checkLetter(guessedLetter);
                 utils.checkWord(blankWord);
                 utils.handleImage();
+                utils.handleUsedLetters();
             }
             inputBox.value = '';
         }
@@ -147,12 +176,14 @@ export default class utils {
             const GUESSBTN = document.getElementById('guessbtn');
             const INPUTBOX = document.getElementById('word-input');
             const WORDINFO = document.getElementById('word-info');
+            const LETTERS = document.querySelector('#letters-content');
             if (storage.getIsWon()) {
                 WININFO.textContent = '';
                 PLAYBTN.hidden = true;
                 GUESSBTN.hidden = false;
                 INPUTBOX.hidden = false;
                 WORDINFO.textContent = '';
+                LETTERS.textContent = '';
                 utils.handleImage();
                 storage.setWord(await utils.getRandomWord());
                 console.log(storage.getWord());
