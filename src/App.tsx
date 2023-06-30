@@ -6,7 +6,7 @@ import GameOver from "./components/GameOver";
 
 function App() {
     const [game, setGame] = useState<hangman | null>(null);
-    const [gameOver, setGameOver] = useState(true);
+    const [gameOver, setGameOver] = useState(false);
 
     useEffect(() => {
         if (game === null) {
