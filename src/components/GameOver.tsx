@@ -14,9 +14,12 @@ const GameOver = ({ game, setGame, setGameOver }: IGameOver) => {
     };
 
     return (
-        <div className="flex flex-col justify-center items-center">
-            <h1 className="text-5xl">GAME OVER</h1>
-            <h1 className="text-5xl">{`The word was ${game.word}`}</h1>
+        <div className="flex flex-col justify-center items-center gap-5">
+            <h1 className="text-5xl font-bold">GAME OVER</h1>
+            <h2 className="text-3xl">
+                The word was{" "}
+                <span className="underline font-semibold">{game.word}</span>
+            </h2>
             <Button variant="contained" onClick={handleReset}>
                 RESET
             </Button>

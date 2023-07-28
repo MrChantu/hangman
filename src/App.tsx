@@ -61,7 +61,9 @@ function App() {
                 />
             ) : (
                 <div className="self-center flex flex-col items-center gap-5 p-5 max-w-lg">
-                    <h1 className="text-5xl">{game.getBlankWord()}</h1>
+                    <h1 className="text-5xl tracking-wide">
+                        {game.getBlankWord()}
+                    </h1>
                     <h1 className="text-5xl">{game.lives}</h1>
                     <div className="flex flex-wrap justify-center gap-1">
                         {game.keys.map((key) => {
